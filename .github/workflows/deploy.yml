@@ -3,7 +3,7 @@ name: Deploy MyST Book to GitHub Pages
 on:
   push:
     branches:
-      - main # Ganti 'master' jika branch Anda bernama master
+      - main
 
 permissions:
   contents: read
@@ -20,6 +20,12 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    
+    # MENAMBAHKAN WORKING DIRECTORY KE SUBFOLDER PROYEK
+    defaults:
+      run:
+        working-directory: ./PSD-B-main
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -40,7 +46,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '_build/site' # Diubah dari _build/html ke _build/site
+          # Mengarahkan path artifact ke folder _build/site di dalam subfolder
+          path: 'PSD-B-main/_build/site'
 
       - name: Deploy to GitHub Pages
         id: deployment
