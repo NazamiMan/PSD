@@ -25,13 +25,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Menggunakan Action Resmi MyST untuk Build Website
-      - name: Build MyST Site
-        uses: executablebooks/mystmd-action@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          path: './PSD-B-main'
-          action: 'build'
-          html: true
+          node-version: 20
+
+      - name: Install MyST CLI
+        run: npm install -g mystmd
+
+      - name: Build MyST Site
+        run: myst build --html
+        working-directory: ./PSD-B-main
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -39,7 +43,6 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Jalur tempat MyST menyimpan hasil kompilasi HTML
           path: './PSD-B-main/_build/html'
 
       - name: Deploy to GitHub Pages
