@@ -25,11 +25,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Menggunakan Action Resmi dari MyST (mystmd-action)
+      # Menggunakan Action Resmi MyST yang benar (mystmd/action)
       - name: Build MyST Site
-        uses: executablebooks/mystmd-action@v1
+        uses: mystmd/action@v1
         with:
-          # Arahkan langsung ke subfolder tempat file myst.yml berada
           path: './PSD-B-main'
           action: 'build'
           html: true
@@ -40,7 +39,6 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Artifact lokasi output hasil build resmi MyST
           path: './PSD-B-main/_build/html'
 
       - name: Deploy to GitHub Pages
