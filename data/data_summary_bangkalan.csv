@@ -1,0 +1,5 @@
+Pollutant,Start Date,End Date,Location,Latitude Min,Latitude Max,Longitude Min,Longitude Max,Data Type,Valid Days,Status
+NO2,2025-08-30,2026-08-30,"Bangkalan, Pulau Madura",-7.0323882,-7.027599,112.7475858,112.753737,RAW (Sentinel-5P),111,Downloaded
+CO,2025-08-30,2026-08-30,"Bangkalan, Pulau Madura",-7.0323882,-7.027599,112.7475858,112.753737,RAW (Sentinel-5P),101,Downloaded
+SO2,2025-08-30,2026-08-30,"Bangkalan, Pulau Madura",-7.0323882,-7.027599,112.7475858,112.753737,RAW (Sentinel-5P),188,Downloaded
+CH4,2025-08-30,2026-08-30,"Bangkalan, Pulau Madura",-7.0323882,-7.027599,112.7475858,112.753737,RAW (Sentinel-5P),1,Downloaded
