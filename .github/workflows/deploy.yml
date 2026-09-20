@@ -40,7 +40,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '_build/html'
+          path: '_build/site' # Diubah dari _build/html ke _build/site
 
       - name: Deploy to GitHub Pages
         id: deployment
