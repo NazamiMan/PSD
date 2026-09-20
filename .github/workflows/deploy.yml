@@ -33,16 +33,19 @@ jobs:
       - name: Install MyST CLI
         run: npm install -g mystmd
 
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
       - name: Build MyST Site
         run: myst build --html
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+        env:
+          BASE_URL: ${{ steps.pages.outputs.base_path }}
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './_build/site'
+          path: './_build/html'
 
       - name: Deploy to GitHub Pages
         id: deployment
