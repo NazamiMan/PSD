@@ -26,8 +26,15 @@ jobs:
         uses: actions/checkout@v4
 
       # Menggunakan Action Resmi MyST yang benar (mystmd/action)
+      # - name: Build MyST Site
+      #   uses: mystmd/action@v1
+      #   with:
+      #     path: './PSD-B-main'
+      #     action: 'build'
+      #     html: true
+
       - name: Build MyST Site
-        uses: mystmd/action@v1
+        uses: mystmd/myst-action@v1
         with:
           path: './PSD-B-main'
           action: 'build'
