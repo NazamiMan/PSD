@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -20,34 +21,27 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    
-    # MENAMBAHKAN WORKING DIRECTORY KE SUBFOLDER PROYEK
-    defaults:
-      run:
-        working-directory: ./PSD-B-main
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install MyST CLI
-        run: npm install -g mystmd
-
+      # Menggunakan Action Resmi dari MyST (mystmd-action)
       - name: Build MyST Site
-        run: myst build --html
-        env:
-          BASE_URL: /${{ github.event.repository.name }}
+        uses: executablebooks/mystmd-action@v1
+        with:
+          # Arahkan langsung ke subfolder tempat file myst.yml berada
+          path: './PSD-B-main'
+          action: 'build'
+          html: true
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Mengarahkan path artifact ke folder _build/site di dalam subfolder
-          path: 'PSD-B-main/_build/site'
+          # Artifact lokasi output hasil build resmi MyST
+          path: './PSD-B-main/_build/html'
 
       - name: Deploy to GitHub Pages
         id: deployment
