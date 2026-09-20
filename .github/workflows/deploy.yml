@@ -35,7 +35,6 @@ jobs:
 
       - name: Build MyST Site
         run: myst build --html
-        working-directory: ./PSD-B-main
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -43,7 +42,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './PSD-B-main/_build/html'
+          path: './_build/site'
 
       - name: Deploy to GitHub Pages
         id: deployment
