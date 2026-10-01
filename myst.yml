@@ -17,7 +17,8 @@ project:
           department: Teknik Informatika
 
   toc:
-    - file: src/1-project/Tugas01-Data-Understanding.ipynb
+    - file: src/1-project/index.md
+    - file: src/1-project/Tugas1.ipynb
     - file: src/1-project/statistik.ipynb
     - file: src/1-project/1-data_preparation.ipynb
   # github:
