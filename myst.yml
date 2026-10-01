@@ -17,8 +17,7 @@ project:
           department: Teknik Informatika
 
   toc:
-    - file: src/1-project/PSD-1.ipynb
-    - file: src/1-project/PSD-1.ipynb
+    - file: src/1-project/Tugas01-Data-Understanding.ipynb
       children:
         - file: src/1-project/index.md
     - file: src/1-project/statistik.ipynb
