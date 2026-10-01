@@ -18,8 +18,6 @@ project:
 
   toc:
     - file: src/1-project/Tugas01-Data-Understanding.ipynb
-      children:
-        - file: src/1-project/index.md
     - file: src/1-project/statistik.ipynb
     - file: src/1-project/1-data_preparation.ipynb
   # github:
