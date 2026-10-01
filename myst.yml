@@ -18,9 +18,9 @@ project:
 
   toc:
     - file: src/1-project/index.md
-    - file: src/1-project/Tugas1.ipynb
-    - file: src/1-project/statistik.ipynb
-    - file: src/1-project/1-data_preparation.ipynb
+    - file: src/1-project/Tugas01_Data-Understanding.ipynb
+    - file: src/1-project/Tugas02_Statistik.ipynb
+    - file: src/1-project/Tugas03_Data-Preoaration.ipynb
   # github:
   # To autogenerate a Table of Contents, run "jupyter book init --write-toc"
 site:
