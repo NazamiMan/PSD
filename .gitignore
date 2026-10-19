@@ -20,3 +20,14 @@ Thumbs.db
 
 # Environment Variables
 .env
+
+#Data
+*.SAFE.zip
+*.SAFE/
+*.jp2
+venv/
+.venv/
+_build/
+.pytest_cache/
+__pycache__/
+.ipynb_checkpoints/

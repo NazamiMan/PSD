@@ -1,0 +1,13 @@
+streamlit>=1.40,<2
+streamlit-folium>=0.23,<1
+folium>=0.17,<1
+numpy>=1.26,<3
+rasterio>=1.4,<2
+geopandas>=1.0,<2
+shapely>=2,<3
+pyproj>=3.6,<4
+scikit-learn>=1.5,<2
+pystac-client>=0.8,<1
+planetary-computer>=1.0,<2
+stackstac>=0.5,<1
+dask[array]>=2024.8,<2027
