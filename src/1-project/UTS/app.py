@@ -64,17 +64,27 @@ def iter_positions(coordinates: Any) -> Iterator[tuple[float, float]]:
             yield from iter_positions(child)
 
 
-def make_leaflet_html(feature_collection: dict[str, Any]) -> str:
+def make_leaflet_html(
+    feature_collection: dict[str, Any], fill_opacity: float
+) -> str:
     geojson_json = json.dumps(feature_collection, ensure_ascii=False).replace("</", "<\\/")
     colors_json = json.dumps(CLASS_COLORS)
+    labels_json = json.dumps(CLASS_LABELS, ensure_ascii=False)
+    opacity_json = json.dumps(fill_opacity)
     return (
         """
 <div id="lulc-map" style="width:100%;height:680px;border-radius:8px"></div>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+@import url("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css");
+#lulc-map { background: #e8edf0; }
+#lulc-map .leaflet-tile-pane img { filter: brightness(1.18) contrast(1.05); }
+</style>
 <script>
 (() => {
   const geojson = __GEOJSON__;
   const colors = __COLORS__;
+  const labels = __LABELS__;
+  const fillOpacity = __FILL_OPACITY__;
   const mapElement = document.getElementById("lulc-map");
   const showError = (message) => {
     mapElement.textContent = message;
@@ -103,20 +113,28 @@ def make_leaflet_html(feature_collection: dict[str, Any]) -> str:
         maxZoom: 19
       }
     ).addTo(map);
+    const lightMap = L.tileLayer(
+      "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        attribution: "© OpenStreetMap contributors",
+        maxZoom: 19
+      }
+    );
     const overlays = {};
     const grouped = {};
+    const boundsLayers = [];
     for (const feature of geojson.features) {
       const className = feature.properties.kelas_tampil;
       (grouped[className] ||= []).push(feature);
     }
     for (const [className, features] of Object.entries(grouped)) {
-      const layer = L.geoJSON(
+      const polygons = L.geoJSON(
         {type: "FeatureCollection", features},
         {
           style: {
             color: colors[className],
             fillColor: colors[className],
-            fillOpacity: 0.35,
+            fillOpacity,
             weight: 2
           },
           onEachFeature: (feature, item) => {
@@ -124,11 +142,46 @@ def make_leaflet_html(feature_collection: dict[str, Any]) -> str:
           }
         }
       ).addTo(map);
-      overlays[`${className} (${features.length})`] = layer;
+      boundsLayers.push(polygons);
+      overlays[`${labels[className]} (${features.length})`] = polygons;
     }
-    L.control.layers({"Citra satelit": imagery}, overlays, {collapsed: false}).addTo(map);
+    L.control.layers(
+      {"Citra satelit (lebih terang)": imagery, "Peta jalan terang": lightMap},
+      overlays,
+      {collapsed: false}
+    ).addTo(map);
+    const legend = L.control({position: "bottomright"});
+    legend.onAdd = () => {
+      const container = L.DomUtil.create("div");
+      Object.assign(container.style, {
+        background: "rgba(255, 255, 255, 0.94)",
+        border: "1px solid #6b7280",
+        padding: "8px 10px",
+        lineHeight: "1.6"
+      });
+      const title = document.createElement("strong");
+      title.textContent = "Klasifikasi area";
+      container.appendChild(title);
+      for (const className of Object.keys(grouped)) {
+        const row = document.createElement("div");
+        const swatch = document.createElement("span");
+        Object.assign(swatch.style, {
+          display: "inline-block",
+          width: "12px",
+          height: "12px",
+          marginRight: "6px",
+          backgroundColor: colors[className],
+          opacity: fillOpacity,
+          verticalAlign: "middle"
+        });
+        row.append(swatch, document.createTextNode(labels[className]));
+        container.appendChild(row);
+      }
+      return container;
+    };
+    legend.addTo(map);
     L.control.scale().addTo(map);
-    const allLayers = L.featureGroup(Object.values(overlays));
+    const allLayers = L.featureGroup(boundsLayers);
     if (allLayers.getLayers().length) {
       map.fitBounds(allLayers.getBounds().pad(0.05));
     }
@@ -139,6 +192,8 @@ def make_leaflet_html(feature_collection: dict[str, Any]) -> str:
 """
         .replace("__GEOJSON__", geojson_json)
         .replace("__COLORS__", colors_json)
+        .replace("__LABELS__", labels_json)
+        .replace("__FILL_OPACITY__", opacity_json)
     )
 
 
@@ -146,8 +201,8 @@ def main() -> None:
     st.set_page_config(page_title="UTS LULC Jawa Timur", layout="wide")
     st.title("Pemeriksaan Poligon Tutupan Lahan Jawa Timur")
     st.caption(
-        "Poligon digitasi ditampilkan di atas basemap satelit. Ini adalah label GeoJSON, "
-        "bukan hasil prediksi model."
+      "Area poligon diwarnai menurut kelas pada GeoJSON. Ini adalah label digitasi, "
+      "bukan hasil prediksi raster model Sentinel-2."
     )
 
     geojson_path = find_repository_root() / "data" / "jawatimur.geojson"
@@ -182,6 +237,15 @@ def main() -> None:
             key=f"class-{class_name}",
         )
     ]
+    transparency = st.sidebar.slider(
+        "Transparansi poligon",
+        min_value=0,
+        max_value=100,
+        value=35,
+        step=5,
+        format="%d%%",
+    )
+    fill_opacity = 1 - transparency / 100
 
     counts = Counter(
         {
@@ -218,7 +282,8 @@ def main() -> None:
         for feature in features_by_class[class_name]
     ]
     map_html = make_leaflet_html(
-        {"type": "FeatureCollection", "features": selected_features}
+        {"type": "FeatureCollection", "features": selected_features},
+        fill_opacity,
     )
     st.html(map_html, unsafe_allow_javascript=True)
 
