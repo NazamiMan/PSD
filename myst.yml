@@ -21,6 +21,12 @@ project:
     - file: src/1-project/Tugas01_Data-Understanding.ipynb
     - file: src/1-project/Tugas02_Statistik.ipynb
     - file: src/1-project/Tugas03_Data-Preoaration.ipynb
+    - file: src/1-project/Tugas04_Outlier-Detection.ipynb
+    - file: src/1-project/Tugas05_Imputasi-Polinomial.ipynb
+    - file: src/1-project/Tugas06_Outlier-Detection.ipynb
+    - file: src/1-project/UTS/klasifikasiLulcjatim.ipynb
+
+
   # github:
   # To autogenerate a Table of Contents, run "jupyter book init --write-toc"
 site:
